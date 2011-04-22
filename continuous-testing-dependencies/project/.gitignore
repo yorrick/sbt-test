@@ -19,15 +19,8 @@ syntax: glob
 *.iml
 
 # building
-target
+boot
 build
-null
-tmp*
-temp*
-dist
-test-output
-build.log
-lib_managed
 
 # other scm
 .svn
