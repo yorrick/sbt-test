@@ -28,6 +28,7 @@ dist
 test-output
 build.log
 lib_managed
+boot
 
 # other scm
 .svn
