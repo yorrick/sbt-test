@@ -2,10 +2,10 @@ package com.yorrick
 
 import org.scalatest.Suite
 
-class CalculatorTest extends Suite {
+class BackendCalculatorTest extends Suite {
 
 	def testOneCalculator() {
-		val calc = new Calculator(1)
+		val calc = new BackendCalculator(1)
 		val result = calc.calculate(2, 3)
 		
 		assert(result === 5)

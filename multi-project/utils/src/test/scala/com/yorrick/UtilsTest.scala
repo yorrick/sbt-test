@@ -1,6 +1,6 @@
 package com.yorrick
 
-import org.scalatest.Suite
+import org.scalatest._
 
 class UtilsTest extends Suite {
 
