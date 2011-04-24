@@ -29,6 +29,8 @@ test-output
 build.log
 lib_managed
 boot
+project/plugins/project/
+project/plugins/src_managed/
 
 # other scm
 .svn
