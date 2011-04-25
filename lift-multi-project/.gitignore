@@ -20,10 +20,10 @@ syntax: glob
 
 # building
 target
-build
+
 null
 tmp*
-temp*
+temp
 dist
 test-output
 build.log
