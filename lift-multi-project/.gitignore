@@ -32,6 +32,7 @@ boot
 project/plugins/project/
 project/plugins/src_managed/
 lift_proto.db.h2.db
+lift_proto.db.lock.db
 
 # other scm
 .svn
