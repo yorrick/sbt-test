@@ -1,6 +1,6 @@
 import sbt._
 
-class ContinuousTestingProject(info: ProjectInfo) extends ParentProject(info) with IdeaProject {
+class LiftMultiProject(info: ProjectInfo) extends ParentProject(info) with IdeaProject {
 
 	//lazy val hi = task {println("hello world"); None}
 	
@@ -40,18 +40,28 @@ class ContinuousTestingProject(info: ProjectInfo) extends ParentProject(info) wi
   import fi.jawsy.sbtplugins.jrebel.JRebelWebPlugin
   import fi.jawsy.sbtplugins.jrebel.JRebelJarPlugin
 
-  class BackendProject(info: ProjectInfo) extends DefaultProject(info) with IdeaProject with JRebelJarPlugin {
+  trait MavenSourceProject extends DefaultProject {
+    override def managedStyle = ManagedStyle.Maven
+
+    override def packageDocsJar = defaultJarPath("-javadoc.jar")
+    override def packageSrcJar= defaultJarPath("-sources.jar")
+
+    lazy val sourceArtifact = Artifact.sources(artifactID)
+    lazy val docsArtifact = Artifact.javadoc(artifactID)
+    override def packageToPublishActions = super.packageToPublishActions ++ Seq(packageDocs, packageSrc)
+  }
+
+  class BackendProject(info: ProjectInfo) extends DefaultProject(info) with IdeaProject with JRebelJarPlugin with MavenSourceProject {
     //val dependsOnUtils = utils
     override def libraryDependencies = Set(
       scalatest
     ) ++ super.libraryDependencies
   }
 
-  class UtilsProject(info: ProjectInfo) extends DefaultProject(info) with IdeaProject with JRebelJarPlugin {
+  class UtilsProject(info: ProjectInfo) extends DefaultProject(info) with IdeaProject with JRebelJarPlugin with MavenSourceProject {
     override def libraryDependencies = Set(
       scalatest
     ) ++ super.libraryDependencies
-
   }
 
   class LiftProject(info: ProjectInfo) extends DefaultWebProject(info) with IdeaProject with JRebelWebPlugin {

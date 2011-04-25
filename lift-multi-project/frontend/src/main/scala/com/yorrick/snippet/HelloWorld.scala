@@ -25,7 +25,7 @@ class HelloWorld {
    */
 
   object SomeWrapper {
-    def tata = "prout" + Utils.getSomethingElse.toString
+    def tata = "polo was here" + Utils.getSomethingElse.toString
   }
 }
 
