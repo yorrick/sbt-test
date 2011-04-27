@@ -6,5 +6,9 @@ class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
 
   val jawsyMavenReleases = "Jawsy.fi M2 releases" at "http://oss.jawsy.fi/maven2/releases"
   val jrebelPlugin = "fi.jawsy" % "sbt-jrebel-plugin" % "0.2.1"
+
+  lazy val cloudbees = "eu.getintheloop" % "sbt-cloudbees-plugin" % "0.2.7"
+  lazy val sonatypeRepo = "sonatype.repo" at "https://oss.sonatype.org/content/groups/public"
 }
+
 

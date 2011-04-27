@@ -64,16 +64,18 @@ class PocketChangeProject(info: ProjectInfo) extends ParentProject(info) with Id
     ) ++ super.libraryDependencies
   }
 
-  class LiftProject(info: ProjectInfo) extends DefaultWebProject(info) with IdeaProject with JRebelWebPlugin {
-    override def libraryDependencies = Set(
-      junit, specs, webkit, logback, wizard, mapper, h2, servlet, jetty6
-    ) ++ super.libraryDependencies
+  class LiftProject(info: ProjectInfo) extends DefaultWebProject(info) with IdeaProject with JRebelWebPlugin with bees.RunCloudPlugin {
+    override def libraryDependencies = Set(junit, specs, webkit, logback, wizard, mapper, h2, servlet, jetty6) ++ super.libraryDependencies
 
     /**
      * Maven repositories
      */
     //lazy val scalatoolsSnapshots = ScalaToolsSnapshots
 
-    override def scanDirectories = Nil
+    // jetty does not scan dirs, since jrebel already does
+    //override def scanDirectories = Nil
+
+    override def beesUsername = Some("yorrick")
+    override def beesApplicationId = Some("pocket-change")
   }
 }
