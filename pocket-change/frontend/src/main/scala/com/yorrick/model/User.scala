@@ -20,7 +20,7 @@ class User extends MegaProtoUser[User] {
 object User extends User with MetaMegaProtoUser[User] {
   override def dbTableName = "users" // define the DB table name
 
-  // Provide our own login page template.
+  // Provide our own login page template .
   override def loginXhtml =
     <lift:surround with="default" at="content">
       { super.loginXhtml }
