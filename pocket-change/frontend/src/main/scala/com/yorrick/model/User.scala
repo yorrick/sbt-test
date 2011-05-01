@@ -2,6 +2,8 @@ package com.yorrick.model
 
 // Import all of the mapper classes
 import _root_.net.liftweb.mapper._
+import net.liftweb.util.Log
+import net.liftweb.common.Logger
 
 // Create a User class extending the Mapper base class
 // MegaProtoUser, which provides default fields and methods
@@ -31,4 +33,14 @@ object User extends User with MetaMegaProtoUser[User] {
     <lift:surround with="default" at="content">
       { super.signupXhtml(user) }
     </lift:surround>
+
+  /**
+   * Overridden to add logging of activation url to be able to activate
+   * without sending mail.
+   */
+  override def signupMailBody(user: User, validationLink: String) = {
+    println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXSending activation mail to " + validationLink)
+    super.signupMailBody(user, validationLink)
+  }
+
 }

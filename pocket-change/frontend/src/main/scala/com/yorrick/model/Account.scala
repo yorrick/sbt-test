@@ -9,6 +9,7 @@ import net.liftweb.common.Empty
 // (which is a "mapped" (to the database) trait that uses a Long primary key)
 // and mixes in trait IdPK, which adds a primary key called "id".
 class Account extends LongKeyedMapper[Account] with IdPK {
+
   // Define the singleton, as in the "User" class
   def getSingleton = Account
 

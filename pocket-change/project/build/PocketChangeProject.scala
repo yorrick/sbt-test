@@ -18,19 +18,19 @@ class PocketChangeProject(info: ProjectInfo) extends ParentProject(info) with Id
   lazy val utils     = project("utils", "utils project", new UtilsProject(_))
 
   // test dependencies
-  val scalatest      = "org.scalatest" % "scalatest" % "1.3" % "test-> default"
-  val junit     = "junit" % "junit" % "4.5" % "test->default"
-  val specs     = "org.scala-tools.testing" %% "specs" % "1.6.6" % "test->default"
+  val scalatest      = "org.scalatest" % "scalatest" % "1.3" % "test-> default" withSources()
+  val junit     = "junit" % "junit" % "4.5" % "test->default"  withSources()
+  val specs     = "org.scala-tools.testing" %% "specs" % "1.6.6" % "test->default" withSources()
 
   val liftVersion = "2.3-RC3"
-  val webkit    = "net.liftweb" %% "lift-webkit" % liftVersion % "compile->default"
-  val logback   = "ch.qos.logback" % "logback-classic" % "0.9.26" % "compile->default"
-  val wizard = "net.liftweb" %% "lift-wizard" % liftVersion % "compile->default"
-  val mapper = "net.liftweb" %% "lift-mapper" % liftVersion % "compile->default"
+  val webkit    = "net.liftweb" %% "lift-webkit" % liftVersion % "compile->default"  withSources()
+  val logback   = "ch.qos.logback" % "logback-classic" % "0.9.26" % "compile->default" withSources()
+  val wizard = "net.liftweb" %% "lift-wizard" % liftVersion % "compile->default" withSources()
+  val mapper = "net.liftweb" %% "lift-mapper" % liftVersion % "compile->default" withSources()
   val h2 = "com.h2database" % "h2" % "1.2.138"
 
-  val servlet   = "javax.servlet" % "servlet-api" % "2.5" % "provided->default"
-  val jetty6    = "org.mortbay.jetty" % "jetty" % "6.1.22" % "test->default"
+  val servlet   = "javax.servlet" % "servlet-api" % "2.5" % "provided->default"  withSources()
+  val jetty6    = "org.mortbay.jetty" % "jetty" % "6.1.22" % "test->default" withSources()
 
   override def parallelExecution = true
 

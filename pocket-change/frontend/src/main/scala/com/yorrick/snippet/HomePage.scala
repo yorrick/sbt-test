@@ -33,7 +33,9 @@ class HomePage {
       }
       bind("account", xhtml, "entry" -> entries)
     }
-    case _ => <lift:embed what="welcome_msg" />
+    case _ => //<lift:embed what="welcome_msg" />
+      <span>Not logged in</span>
+      //val entries =
   }
 
 }
