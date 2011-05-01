@@ -39,7 +39,7 @@ object User extends User with MetaMegaProtoUser[User] {
    * without sending mail.
    */
   override def signupMailBody(user: User, validationLink: String) = {
-    println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXSending activation mail to " + validationLink)
+    println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nSending activation mail to " + validationLink)
     super.signupMailBody(user, validationLink)
   }
 
