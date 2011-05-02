@@ -22,6 +22,9 @@ class User extends MegaProtoUser[User] {
 object User extends User with MetaMegaProtoUser[User] {
   override def dbTableName = "users" // define the DB table name
 
+  // Just for testing purposes. In production we remove this
+  override def skipEmailValidation = true
+
   // Provide our own login page template .
   override def loginXhtml =
     <lift:surround with="default" at="content">
@@ -34,13 +37,13 @@ object User extends User with MetaMegaProtoUser[User] {
       { super.signupXhtml(user) }
     </lift:surround>
 
-  /**
-   * Overridden to add logging of activation url to be able to activate
-   * without sending mail.
-   */
-  override def signupMailBody(user: User, validationLink: String) = {
-    println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nSending activation mail to " + validationLink)
-    super.signupMailBody(user, validationLink)
-  }
+//  /**
+//   * Overridden to add logging of activation url to be able to activate
+//   * without sending mail.
+//   */
+//  override def signupMailBody(user: User, validationLink: String) = {
+//    println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\nSending activation mail to " + validationLink)
+//    super.signupMailBody(user, validationLink)
+//  }
 
 }
