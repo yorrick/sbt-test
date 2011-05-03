@@ -3,8 +3,10 @@
 package com.yorrick {
 package snippet {
 
+import requestvars.accountNumber
 import scala.xml.{NodeSeq, Text}
 import net.liftweb._
+import http.{S, RequestVar}
 import util._
 import common._
 import java.util.Date
@@ -23,7 +25,7 @@ class HomePage {
   def summary (xhtml : NodeSeq) : NodeSeq = User.currentUser match {
     case Full(user) => {
       val entries : NodeSeq = user.allAccounts match {
-        case Nil => Text("You have no accounts set up")
+        case Nil => Text("You have no accounts set up, you asked for account number " + accountNumber.is)
         case accounts => accounts.flatMap({account =>
           bind("acct", chooseTemplate("account", "entry", xhtml),
                "name" -> <a href={"/account/" + account.name.is}>

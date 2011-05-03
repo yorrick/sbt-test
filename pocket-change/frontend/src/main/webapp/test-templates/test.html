@@ -1,0 +1,31 @@
+<lift:surround with="default" at="content">
+<head>
+  <!-- include the required plugins -->
+  <script type="text/javascript" src="/scripts/date.js"></script>
+  <!--[if IE]>
+  <script type="text/javascript" src="/scripts/jquery.bgiframe.js">
+  </script>
+  <![endif]-->
+​
+  <!-- include the jQuery DatePicker JavaScript and CSS -->
+  <script type="text/javascript" src="/scripts/jquery.datePicker.js">
+  </script>
+  <link rel="stylesheet" type="text/css" href="/style/datePicker.css" />
+</head>
+
+​
+    <div class="column span-24">
+        <lift:OtherSnippet.summary>
+            <p>Test de passage de variable entre snippets</p>
+            <p> <other:value/></p> <br/>
+        </lift:OtherSnippet.summary>
+    </div>
+​
+    <script type="text/javascript">
+      Date.format = ’yyyy/mm/dd’;
+      jQuery(function () {
+        jQuery(’#entrydate’).datePicker({startDate:’00010101’,
+                                        clickInput:true});
+      })
+    </script>
+</lift:surround>

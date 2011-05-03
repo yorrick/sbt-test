@@ -3,7 +3,7 @@
 package bootstrap.liftweb
 
 import net.liftweb._
-import http.{LiftRules, NotFoundAsTemplate, ParsePath}
+import http._
 import sitemap.{SiteMap, Menu, Loc}
 import util.{ NamedPF }
 import _root_.net.liftweb.sitemap.Loc._
@@ -11,7 +11,6 @@ import net.liftweb._
 import mapper.{Schemifier, DB, StandardDBVendor, DefaultConnectionIdentifier}
 import util.{Props}
 import common.{Full}
-import http.{S}
 import com.yorrick.model._
 
 
@@ -40,12 +39,12 @@ class Boot {
 
     // build sitemap
     val entries = List(Menu("Home") / "index") :::
-                  List(Menu(Loc("Static", Link(List("static"), true, "/static/index"), 
-                       "Static Content"))) :::
+                  List(Menu(Loc("Static", Link(List("static"), true, "/static/index"), "Static Content"))) :::
+                  List(Menu(Loc("Test",   Link(List("test-templates"), true, "/test-templates/test"), "Test template"))) :::
                   // the User management menu items
                   User.sitemap :::
                   Nil
-    
+
     LiftRules.uriNotFound.prepend(NamedPF("404handler"){
       case (req,failure) => NotFoundAsTemplate(
         ParsePath(List("exceptions","404"),"html",false,false))
@@ -68,6 +67,10 @@ class Boot {
 
     // Make a transaction span the whole HTTP request
     S.addAround(DB.buildLoanWrapper)
-    
+
+    LiftRules.statelessRewrite.append({
+      case RewriteRequest(ParsePath(List("account", accountName), _, _, _), _, _) =>
+         RewriteResponse("viewAcct" :: Nil, Map("accountName" -> accountName))
+    })
   }
 }
