@@ -12,6 +12,7 @@ import mapper.{Schemifier, DB, StandardDBVendor, DefaultConnectionIdentifier}
 import util.{Props}
 import common.{Full}
 import com.yorrick.model._
+import com.yorrick.view.RssView
 
 
 class Boot {
@@ -41,6 +42,8 @@ class Boot {
     val entries = List(Menu("Home") / "index") :::
                   List(Menu(Loc("Static", Link(List("static"), true, "/static/index"), "Static Content"))) :::
                   List(Menu(Loc("Test",   Link(List("test-templates"), true, "/test-templates/test"), "Test template"))) :::
+                  List(Menu(Loc("RssView", ("site" :: Nil) -> true,                "RssView", Hidden )) ) :::
+                  List(Menu(Loc("Expenses", ("expenses" :: "recent" :: Nil) -> true, "RssView", Hidden )) ) :::
                   // the User management menu items
                   User.sitemap :::
                   Nil
@@ -72,5 +75,19 @@ class Boot {
       case RewriteRequest(ParsePath(List("account", accountName), _, _, _), _, _) =>
          RewriteResponse("viewAcct" :: Nil, Map("accountName" -> accountName))
     })
+
+    // view dispatching
+    LiftRules.viewDispatch.append {
+      // This is an explicit dispatch to a particular method based on the path
+      case List("expenses", "recent", acctId, authToken) =>
+        Left(() => Full(RssView.recent(acctId, authToken)))
+
+      // This is a dispatch via the same LiftView object. The path
+      // "/Site/news" will match this dispatch because of our dispatch
+      // method defined in RSSView. The path "/Site/stuff/news" will not
+      // match because the dispatch will be attempted on List("Site","stuff")
+      case List("site") => Right(RssView)
+    }
   }
+
 }
