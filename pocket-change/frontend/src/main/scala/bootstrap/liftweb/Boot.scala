@@ -43,7 +43,9 @@ class Boot {
                   List(Menu(Loc("Static", Link(List("static"), true, "/static/index"), "Static Content"))) :::
                   List(Menu(Loc("Test",   Link(List("test-templates"), true, "/test-templates/test"), "Test template"))) :::
                   List(Menu(Loc("RssView", ("site" :: Nil) -> true,                "RssView", Hidden )) ) :::
-                  List(Menu(Loc("Expenses", ("expenses" :: "recent" :: Nil) -> true, "RssView", Hidden )) ) :::
+                  List(Menu(Loc("Expense", ("expense" :: "recent" :: Nil) -> true, "RssView", Hidden )) ) :::
+                  List(Menu(Loc("ExpenseDynamicView", ("ExpenseView" :: Nil) -> true, "ExpenseView", Hidden )) ) :::
+                  List(Menu(Loc("ExpenseDynamicInsecureView", ("ExpenseInsecureView" :: Nil) -> true, "ExpenseInsecureView", Hidden )) ) :::
                   // the User management menu items
                   User.sitemap :::
                   Nil
