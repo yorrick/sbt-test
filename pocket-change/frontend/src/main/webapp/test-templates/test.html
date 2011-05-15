@@ -1,31 +1,40 @@
-<lift:surround with="default" at="content">
-<head>
-  <!-- include the required plugins -->
-  <script type="text/javascript" src="/scripts/date.js"></script>
-  <!--[if IE]>
-  <script type="text/javascript" src="/scripts/jquery.bgiframe.js">
-  </script>
-  <![endif]-->
-​
-  <!-- include the jQuery DatePicker JavaScript and CSS -->
-  <script type="text/javascript" src="/scripts/jquery.datePicker.js">
-  </script>
-  <link rel="stylesheet" type="text/css" href="/style/datePicker.css" />
-</head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ <html xmlns="http://www.w3.org/1999/xhtml">
 
-​
-    <div class="column span-24">
-        <lift:OtherSnippet.summary>
-            <p>Test de passage de variable entre snippets</p>
-            <p> <other:value/></p> <br/>
-        </lift:OtherSnippet.summary>
-    </div>
-​
-    <script type="text/javascript">
-      Date.format = ’yyyy/mm/dd’;
-      jQuery(function () {
-        jQuery(’#entrydate’).datePicker({startDate:’00010101’,
-                                        clickInput:true});
-      })
-    </script>
-</lift:surround>
+    <head>
+      <!-- include the required plugins -->
+      <script type="text/javascript" src="/scripts/date.js"></script>
+      <!--[if IE]>
+      <script type="text/javascript" src="/scripts/jquery.bgiframe.js">
+      </script>
+      <![endif]-->
+    ​
+      <!-- include the jQuery DatePicker JavaScript and CSS -->
+      <script type="text/javascript" src="/scripts/jquery.datePicker.js">
+      </script>
+      <link rel="stylesheet" type="text/css" href="/style/datePicker.css" />
+    </head>
+
+   <body class="lift:content_id=real_content">
+     <div class="lift:surround?with=default;at=content" id="real_content">
+        <div class="column span-24 lift:snippet?type=OtherSnippet.summary">
+            <p>Test de passage de variable entre snippets, avec un template editor friendly</p>
+            <!--<p> <other:value/></p> <br/>-->
+        </div>
+
+        <div class="lift:snippet?type=DynamicSnippet.dynamicMethod">
+            <p>Dynamic method invocation on dynamic snippet</p>
+        </div>
+
+        <div class="lift:snippet?type=DynamicDispatchSnippet.toto">
+            <p>Static method invocation on dynamic snippet</p>
+        </div>
+
+        <div class="lift:snippet?type=DynamicDispatchSnippet.toto">
+            <p>Static non existant method invocation on dynamic snippet</p>
+        </div>
+     </div>
+   </body>
+
+ </html>
