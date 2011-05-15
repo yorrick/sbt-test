@@ -12,7 +12,7 @@ class ExpenseView extends LiftView {
 
   def doEnumerate () : NodeSeq = {
     <lift:surround with="default" at="content">
-     { "test" }
+     { "test de la vue dynamique" }
     </lift:surround>
   }
 

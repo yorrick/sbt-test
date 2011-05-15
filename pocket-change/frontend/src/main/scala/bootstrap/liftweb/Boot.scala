@@ -42,10 +42,12 @@ class Boot {
     val entries = List(Menu("Home") / "index") :::
                   List(Menu(Loc("Static", Link(List("static"), true, "/static/index"), "Static Content"))) :::
                   List(Menu(Loc("Test",   Link(List("test-templates"), true, "/test-templates/test"), "Test template"))) :::
-                  List(Menu(Loc("RssView", ("site" :: Nil) -> true,                "RssView", Hidden )) ) :::
-                  List(Menu(Loc("Expense", ("expense" :: "recent" :: Nil) -> true, "RssView", Hidden )) ) :::
-                  List(Menu(Loc("ExpenseDynamicView", ("ExpenseView" :: Nil) -> true, "ExpenseView", Hidden )) ) :::
-                  List(Menu(Loc("ExpenseDynamicInsecureView", ("ExpenseInsecureView" :: Nil) -> true, "ExpenseInsecureView", Hidden )) ) :::
+                  // vues statiques
+                  List(Menu(Loc("RssView", ("site" :: Nil) -> true,                "RssViewMenuLabel", Hidden )) ) :::
+                  List(Menu(Loc("Expense", ("expense" :: "recent" :: Nil) -> true, "RssViewMenuLabel", Hidden )) ) :::
+                  // vues dynamiques
+                  List(Menu(Loc("ExpenseDynamicView", ("ExpenseView" :: Nil) -> true, "ExpenseViewMenuLabel", Hidden )) ) :::
+                  List(Menu(Loc("ExpenseDynamicInsecureView", ("ExpenseInsecureView" :: Nil) -> true, "ExpenseInsecureViewMenuLabel", Hidden )) ) :::
                   // the User management menu items
                   User.sitemap :::
                   Nil
@@ -81,7 +83,7 @@ class Boot {
     // view dispatching
     LiftRules.viewDispatch.append {
       // This is an explicit dispatch to a particular method based on the path
-      case List("expenses", "recent", acctId, authToken) =>
+      case List("expense", "recent", acctId, authToken) =>
         Left(() => Full(RssView.recent(acctId, authToken)))
 
       // This is a dispatch via the same LiftView object. The path
