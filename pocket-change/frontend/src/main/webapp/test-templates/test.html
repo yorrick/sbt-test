@@ -23,6 +23,7 @@
             <!--<p> <other:value/></p> <br/>-->
         </div>
 
+        <!-- Dynamic mapping -->
         <div class="lift:snippet?type=DynamicSnippet.dynamicMethod">
             <p>Dynamic method invocation on dynamic snippet</p>
         </div>
@@ -33,6 +34,17 @@
 
         <div class="lift:snippet?type=DynamicDispatchSnippet.toto">
             <p>Static non existant method invocation on dynamic snippet</p>
+        </div>
+
+        <!-- Explicit mapping -->
+        <div class="lift:snippet?type=StaticDispatchSnippet.toto">
+            <p>Method invocation on static snippet</p>
+        </div>
+
+        <br/>
+
+        <div class="lift:snippet?type=StaticDispatchSnippet">
+            <p>Method invocation on static snippet</p>
         </div>
      </div>
    </body>

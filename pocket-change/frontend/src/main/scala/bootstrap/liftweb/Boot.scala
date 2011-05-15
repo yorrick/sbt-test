@@ -12,7 +12,8 @@ import mapper.{Schemifier, DB, StandardDBVendor, DefaultConnectionIdentifier}
 import util.{Props}
 import common.{Full}
 import com.yorrick.model._
-import com.yorrick.view.RssView
+import com.yorrick.snippet.StaticDispatchSnippet
+import com.yorrick.view.{TasksView, RssView}
 
 
 class Boot {
@@ -48,6 +49,7 @@ class Boot {
                   // vues dynamiques
                   List(Menu(Loc("ExpenseDynamicView", ("ExpenseView" :: Nil) -> true, "ExpenseViewMenuLabel", Hidden )) ) :::
                   List(Menu(Loc("ExpenseDynamicInsecureView", ("ExpenseInsecureView" :: Nil) -> true, "ExpenseInsecureViewMenuLabel", Hidden )) ) :::
+                  List(Menu(Loc("TaskView", ("viewTasks" :: Nil) -> true, "List of tasks"))) :::
                   // the User management menu items
                   User.sitemap :::
                   Nil
@@ -78,6 +80,8 @@ class Boot {
     LiftRules.statelessRewrite.append({
       case RewriteRequest(ParsePath(List("account", accountName), _, _, _), _, _) =>
          RewriteResponse("viewAcct" :: Nil, Map("accountName" -> accountName))
+      case RewriteRequest(ParsePath(List("tasks", taskImportance), _, _, _), _, _) =>
+               RewriteResponse("viewTasks" :: Nil, Map("taskImportance" -> taskImportance))
     })
 
     // view dispatching
@@ -91,6 +95,20 @@ class Boot {
       // method defined in RSSView. The path "/Site/stuff/news" will not
       // match because the dispatch will be attempted on List("Site","stuff")
       case List("site") => Right(RssView)
+
+      // list of tasks
+      case "viewTasks" :: Nil => Left(() => Full(TasksView.list))
+    }
+
+    // snippet dispatching
+    LiftRules.snippetDispatch.append {
+      case "StaticDispatchSnippet" => StaticDispatchSnippet
+    }
+
+    LiftRules.snippets.append {
+      // other method by default
+      case "StaticDispatchSnippet" :: Nil => StaticDispatchSnippet.render("no name") _
+      case "StaticDispatchSnippet" :: name :: Nil => StaticDispatchSnippet.render(name) _
     }
   }
 
