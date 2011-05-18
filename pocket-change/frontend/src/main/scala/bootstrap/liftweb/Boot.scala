@@ -12,8 +12,8 @@ import mapper.{Schemifier, DB, StandardDBVendor, DefaultConnectionIdentifier}
 import util.{Props}
 import common.{Full}
 import com.yorrick.model._
-import com.yorrick.snippet.StaticDispatchSnippet
 import com.yorrick.view.{TasksView, RssView}
+import com.yorrick.snippet.{TasksSnippet, StaticDispatchSnippet}
 
 
 class Boot {
@@ -103,6 +103,7 @@ class Boot {
     // snippet dispatching
     LiftRules.snippetDispatch.append {
       case "StaticDispatchSnippet" => StaticDispatchSnippet
+      case "Tasks"                 => TasksSnippet
     }
 
     LiftRules.snippets.append {

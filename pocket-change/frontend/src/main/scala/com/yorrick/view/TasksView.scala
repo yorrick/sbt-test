@@ -2,7 +2,6 @@ package com.yorrick.view
 
 import net.liftweb.http.LiftView
 import xml.NodeSeq
-import com.yorrick.model.TaskImportance
 import com.yorrick.snippet.requestvars.taskImportance
 
 
@@ -18,9 +17,9 @@ object TasksView extends LiftView {
       <p>Liste des taches à partir de {taskImportance.is}</p>
       <ul >
         <li>
-          <h2>Titre</h2>
-          <p>Importance</p>
-          <p>Detail</p>
+          <div class="lift:Tasks.list">
+            <span>test</span>
+          </div>
         </li>
       </ul>
     </lift:surround>
