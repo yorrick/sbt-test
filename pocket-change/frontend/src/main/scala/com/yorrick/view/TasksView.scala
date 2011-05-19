@@ -14,13 +14,14 @@ object TasksView extends LiftView {
   // specific rss feed for the user
   def list : NodeSeq =
     <lift:surround with="default" at="content">
-      <p>Liste des taches à partir de {taskImportance.is}</p>
+      <h2>Liste des taches à partir de {taskImportance.is}</h2>
       <ul >
-        <li>
-          <div class="lift:Tasks.list">
-            <span>test</span>
-          </div>
-        </li>
+        <lift:Tasks.list>
+          <li>
+            <h3><tasks:label/></h3>
+            <p><tasks:description/></p>
+          </li>
+        </lift:Tasks.list>
       </ul>
     </lift:surround>
 

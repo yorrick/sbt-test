@@ -23,6 +23,6 @@ object Task {
   /**
    * Simule un chargement de données
    */
-  private def getTasks(importance: TaskImportance.Value) : List[Task] = tasks filter (_.importance == importance)
+  def getTasks(importance: TaskImportance.Value) : List[Task] = tasks filter (_.importance == importance)
 
 }

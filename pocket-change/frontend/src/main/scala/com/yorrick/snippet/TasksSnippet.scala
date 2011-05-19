@@ -7,6 +7,7 @@ import requestvars.taskImportance
 import xml.{Text, NodeSeq}
 import net.liftweb.http.DispatchSnippet
 import model.{Task, TaskImportance}
+import net.liftweb.util.BindHelpers._
 
 object TasksSnippet extends DispatchSnippet {
 
@@ -14,8 +15,14 @@ object TasksSnippet extends DispatchSnippet {
     case "list" => listOfSnippets(taskImportance.is) _
   }
 
-  private def listOfSnippets(importance: TaskImportance.Value) (xhtml : NodeSeq) : NodeSeq = {
-    xhtml
+  private def listOfSnippets(importance: TaskImportance.Value) (content : NodeSeq) : NodeSeq = {
+    //<h2>test</h2>
+    Task.getTasks(importance).flatMap(task =>
+      bind("tasks", content,
+           "label" -> Text(task.label),
+           "description" -> Text(task.detail)
+      )
+    )
   }
 
 }
