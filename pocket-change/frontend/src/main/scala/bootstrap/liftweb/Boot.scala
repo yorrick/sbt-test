@@ -49,7 +49,8 @@ class Boot {
                   // vues dynamiques
                   List(Menu(Loc("ExpenseDynamicView", ("ExpenseView" :: Nil) -> true, "ExpenseViewMenuLabel", Hidden )) ) :::
                   List(Menu(Loc("ExpenseDynamicInsecureView", ("ExpenseInsecureView" :: Nil) -> true, "ExpenseInsecureViewMenuLabel", Hidden )) ) :::
-                  List(Menu(Loc("TaskView", ("viewTasks" :: Nil) -> true, "List of tasks"))) :::
+                  //List(Menu(Loc("TaskView", ("viewTasks" :: Nil) -> true, "List of tasks"))) :::
+                  List(Menu(Loc("TaskView", Link(List("viewTasks"), true, "/tasks/"), "List of tasks"))) :::
                   // the User management menu items
                   User.sitemap :::
                   Nil
