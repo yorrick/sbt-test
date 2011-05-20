@@ -13,6 +13,7 @@ object TasksSnippet extends DispatchSnippet {
 
   def dispatch : DispatchIt = {
     case "list" => listOfSnippets(taskImportance.is) _
+    case "listEditorFriendly" => listEditorFriendly _
   }
 
   private def listOfSnippets(importance: TaskImportance.Value) (content : NodeSeq) : NodeSeq = {
@@ -22,6 +23,13 @@ object TasksSnippet extends DispatchSnippet {
            "label" -> Text(task.label),
            "description" -> Text(task.detail)
       )
+    )
+  }
+
+  private def listEditorFriendly(content : NodeSeq) : NodeSeq = {
+    val task = Task.getTasks(0)
+    Task.getTasks.flatMap(task =>
+      ("#label" #> task.label & "#description" #> task.detail).apply(content)
     )
   }
 

@@ -25,4 +25,9 @@ object Task {
    */
   def getTasks(importance: TaskImportance.Value) : List[Task] = tasks filter (_.importance == importance)
 
+  /**
+   * Retounre toutes les taches
+   */
+  def getTasks = tasks
+
 }
