@@ -108,16 +108,16 @@ class Boot {
       // S.snippetForClass checks to see if an instance has already
       // registered. This is the case after form submission or when
       // we use the StatefulSnippet.link or .redirectTo methods
-      case "BridgeKeeper" => S.snippetForClass("BridgeKeeper") openOr {
+      case "BridgeKeeper" => S.snippetForClass("BridgeKeeperSnippet") openOr {
         // If we haven’t already registered an instance, create one
         println("creating new snippet for bridge keeper")
         val inst = new BridgeKeeper
         // The name is what Lift uses to locate an instance (S.snippetForClass)
         // We need to add it so that the Stateful callback functions can
         // self-register
-        inst.addName("BridgeKeeper")
+        inst.addName("BridgeKeeperSnippet")
         // Register this instance for the duration of the request
-        S.overrideSnippetForClass("BridgeKeeper", inst)
+        S.overrideSnippetForClass("BridgeKeeperSnippet", inst)
         inst
       }
     }
