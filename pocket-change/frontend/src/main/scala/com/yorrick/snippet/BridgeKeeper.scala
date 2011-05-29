@@ -1,11 +1,10 @@
 package com.yorrick.snippet
 
-import net.liftweb.http.StatefulSnippet
-import xml.{Text, NodeSeq}
-import net.liftweb.http.DispatchSnippet
 import net.liftweb.util.BindHelpers._
 import com.yorrick.model
 import model.TaskImportance
+import xml.{Elem, Text, NodeSeq}
+import net.liftweb.http.{S, SHtml, StatefulSnippet, DispatchSnippet}
 
 class BridgeKeeper extends StatefulSnippet {
 
@@ -16,21 +15,23 @@ class BridgeKeeper extends StatefulSnippet {
   }
 
   def firstPage(content : NodeSeq) : NodeSeq = {
-    dispatch = {case "challenge" => secondPage _}
+    def processFirstCall() = {
+      dispatch = {case "challenge" => secondPage _}
+    }
 
-    etape("Initiale", content)
+    etape("Initiale", link("test", processFirstCall, content \\ "a"), content)
   }
 
   def secondPage(content: NodeSeq) : NodeSeq = {
-    dispatch = {case "challenge" => firstPage _}
+    def processSecondCall = {
+      unregisterThisSnippet()
+      S.redirectTo("test")
+    }
 
-    etape("Deuxième", content)
+    etape("Deuxième", SHtml.link("test", processSecondCall _, content \\ "a"), content)
   }
 
-  def etape(nomEtape : String, content : NodeSeq) = {
-    // permet de voir quelle instance de snippet est utilisee
-    println(this)
-
+  def etape(nomEtape : String, link : Elem, content : NodeSeq) = {
     count += 1
     stringValue = "quelque chose " + count
 
@@ -38,8 +39,7 @@ class BridgeKeeper extends StatefulSnippet {
       "#etape *+"       #> nomEtape &
       "#count *+"       #> count &
       "#stringValue *+" #> stringValue &
-      //"#link"           #> link("test", () => redirectTo("test"), <span>Passer à l'étape suivante</span>)
-      ".link"           #> link("test", () => redirectTo("test"), chooseTemplate("link", "link", content))
+      ".link"           #> link
     ).apply(content)
   }
 
