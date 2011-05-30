@@ -12,8 +12,8 @@ import mapper.{Schemifier, DB, StandardDBVendor, DefaultConnectionIdentifier}
 import util.{Props}
 import common.{Full}
 import com.yorrick.model._
-import com.yorrick.view.{TasksView, RssView}
-import com.yorrick.snippet.{BridgeKeeper, TasksSnippet, StaticDispatchSnippet}
+import com.yorrick.view.{FormsTestView, TasksView, RssView}
+import com.yorrick.snippet.{LedgerSnippet, BridgeKeeper, TasksSnippet, StaticDispatchSnippet}
 
 class Boot {
   def boot {
@@ -45,6 +45,7 @@ class Boot {
                   // vues statiques
                   List(Menu(Loc("RssView", ("site" :: Nil) -> true,                "RssViewMenuLabel", Hidden )) ) :::
                   List(Menu(Loc("Expense", ("expense" :: "recent" :: Nil) -> true, "RssViewMenuLabel", Hidden )) ) :::
+                  List(Menu(Loc("TestForms", ("forms" :: Nil) -> true, "Test des formulaires"))) :::
                   // vues dynamiques
                   List(Menu(Loc("ExpenseDynamicView", ("ExpenseView" :: Nil) -> true, "ExpenseViewMenuLabel", Hidden )) ) :::
                   List(Menu(Loc("ExpenseDynamicInsecureView", ("ExpenseInsecureView" :: Nil) -> true, "ExpenseInsecureViewMenuLabel", Hidden )) ) :::
@@ -98,12 +99,16 @@ class Boot {
 
       // list of tasks
       case "viewTasks" :: Nil => Left(() => Full(TasksView.list))
+
+      // test des formulaires
+      case "forms" :: Nil => Right(FormsTestView)
     }
 
     // snippet dispatching
     LiftRules.snippetDispatch.append {
       case "StaticDispatchSnippet" => StaticDispatchSnippet
       case "Tasks"                 => TasksSnippet
+      case "Ledger"                => LedgerSnippet
 
       // S.snippetForClass checks to see if an instance has already
       // registered. This is the case after form submission or when
