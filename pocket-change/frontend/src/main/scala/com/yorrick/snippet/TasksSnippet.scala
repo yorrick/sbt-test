@@ -27,12 +27,15 @@ object TasksSnippet extends DispatchSnippet {
   }
 
   private def listEditorFriendly(content : NodeSeq) : NodeSeq = {
-    Task.getTasks.flatMap(task =>
+    val result = Task.getTasks.flatMap(task =>
       (
         "#label *" #> task.label &
         ".description *+" #> task.detail
       ).apply(content)
     )
+
+//    println(result)
+    result
   }
 
 }

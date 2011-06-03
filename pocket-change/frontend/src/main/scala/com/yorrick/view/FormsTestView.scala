@@ -39,9 +39,11 @@ object FormsTestView extends LiftView {
           <li>
             <h3 id="label">Label de la tâche</h3>
             <p class="description">Description : </p>
-            <div class="lift:Ledger.editLink">
-              <a id="editLink">Editer la tâche</a>
-            </div>
+            <p>
+              <lift:Ledger.editLink>
+                <a id="editLink">Editer la tâche</a>
+              </lift:Ledger.editLink>
+            </p>
           </li>
         </div>
       </ul>

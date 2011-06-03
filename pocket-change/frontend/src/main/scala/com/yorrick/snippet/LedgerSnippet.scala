@@ -58,15 +58,16 @@ object LedgerSnippet extends DispatchSnippet {
 
   private def editLink(content : NodeSeq) : NodeSeq = {
     val redirectPath = "/"
-    val linkMarkupId = "editLink"
 
     def linkCallback = {
       S.redirectTo(redirectPath)
     }
 
+    println( content \\ "a")
+
     (
       // TODO changer le lien, et mettre un lien vers une page d'edition
-      ("#"+ linkMarkupId)    #> SHtml.link(redirectPath, linkCallback _, content \\ "a" \ ("@" + linkMarkupId))
+      "#editLink"  #> SHtml.link(redirectPath, linkCallback _, content \\ "a")
     ).apply(content)
   }
 
