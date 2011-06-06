@@ -3,6 +3,7 @@
 package bootstrap.liftweb
 
 import net.liftweb._
+import common.{Empty, Failure, Full}
 import http._
 import sitemap.{SiteMap, Menu, Loc}
 import util.{ NamedPF }
@@ -10,10 +11,9 @@ import _root_.net.liftweb.sitemap.Loc._
 import net.liftweb._
 import mapper.{Schemifier, DB, StandardDBVendor, DefaultConnectionIdentifier}
 import util.{Props}
-import common.{Full}
 import com.yorrick.model._
 import com.yorrick.view.{FormsTestView, TasksView, RssView}
-import com.yorrick.snippet.{LedgerSnippet, BridgeKeeper, TasksSnippet, StaticDispatchSnippet}
+import com.yorrick.snippet._
 
 class Boot {
   def boot {
@@ -38,6 +38,25 @@ class Boot {
     // where to search snippet
     LiftRules.addToPackages("com.yorrick")
 
+    // url rewriting
+    LiftRules.statelessRewrite.append({
+      case RewriteRequest(ParsePath(List("account", accountName), _, _, _), _, _) =>
+         RewriteResponse("viewAcct" :: Nil, Map("accountName" -> accountName))
+
+      case RewriteRequest(ParsePath(List("tasks", "edition", taskId), _, _, _), _, _) =>
+        try {
+          val id = taskId.toInt
+          currentTask(Full(Task.getTask(id)))
+        } catch {
+          case e : NumberFormatException => currentTask(Failure("Task id must be a number"))
+          case e => currentTask(Failure("Error : " + e.getMessage))
+        }
+        RewriteResponse("tasks-management" :: "edit" :: Nil/*, {println("url rewriting " + taskId); Map("taskId" -> taskId)}*/)
+
+      case RewriteRequest(ParsePath(List("tasks", taskImportance), _, _, _), _, _) =>
+         RewriteResponse("tasks-management" :: "list" :: Nil, Map("taskImportance" -> taskImportance))
+    })
+
     // build sitemap
     val entries = List(Menu("Home") / "index") :::
                   List(Menu(Loc("Static", Link(List("static"), true, "/static/index"), "Static Content"))) :::
@@ -49,8 +68,10 @@ class Boot {
                   // vues dynamiques
                   List(Menu(Loc("ExpenseDynamicView", ("ExpenseView" :: Nil) -> true, "ExpenseViewMenuLabel", Hidden )) ) :::
                   List(Menu(Loc("ExpenseDynamicInsecureView", ("ExpenseInsecureView" :: Nil) -> true, "ExpenseInsecureViewMenuLabel", Hidden )) ) :::
+                  // taches
                   //List(Menu(Loc("TaskView", ("viewTasks" :: Nil) -> true, "List of tasks"))) :::
-                  List(Menu(Loc("TaskView", Link(List("viewTasks"), true, "/tasks/"), "List of tasks"))) :::
+                  List(Menu(Loc("Tasks", Link(List("tasks-management"), true, "/tasks/"), "List of tasks"))) :::
+                  //List(Menu(Loc("TaskEdition", Link(List("tasks-management", "edit"), true, "/tasks/edition"), "Edit a task", Hidden))) :::
                   // the User management menu items
                   User.sitemap :::
                   Nil
@@ -78,12 +99,6 @@ class Boot {
     // Make a transaction span the whole HTTP request
     S.addAround(DB.buildLoanWrapper)
 
-    LiftRules.statelessRewrite.append({
-      case RewriteRequest(ParsePath(List("account", accountName), _, _, _), _, _) =>
-         RewriteResponse("viewAcct" :: Nil, Map("accountName" -> accountName))
-      case RewriteRequest(ParsePath(List("tasks", taskImportance), _, _, _), _, _) =>
-               RewriteResponse("viewTasks" :: Nil, Map("taskImportance" -> taskImportance))
-    })
 
     // view dispatching
     LiftRules.viewDispatch.append {
@@ -98,7 +113,8 @@ class Boot {
       case List("site") => Right(RssView)
 
       // list of tasks
-      case "viewTasks" :: Nil => Left(() => Full(TasksView.list))
+      //case "tasks-management" :: "list" :: Nil => {println("vue liste des taches appelée"); Left(() => Full(TasksView.list))}
+      case "tasks-management" :: Nil => {println("vue des taches appelée"); Right(TasksView)}
 
       // test des formulaires
       case "forms" :: Nil => Right(FormsTestView)

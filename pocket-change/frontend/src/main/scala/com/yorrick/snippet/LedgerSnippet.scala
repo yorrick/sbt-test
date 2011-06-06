@@ -57,18 +57,22 @@ object LedgerSnippet extends DispatchSnippet {
   }
 
   private def editLink(content : NodeSeq) : NodeSeq = {
-    val redirectPath = "/"
+    val result = Task.getTasks.flatMap(task => {
+        val redirectPath = "/tasks/edit/" + task.id
+        // callback du lien
+        def linkCallback = {
+          S.redirectTo(redirectPath)
+        }
 
-    def linkCallback = {
-      S.redirectTo(redirectPath)
-    }
+        (
+          "#label *" #> task.label &
+          ".description *+" #> task.detail &
+          "#editLink"  #> SHtml.link(redirectPath, linkCallback _, content \\ "a")
+        ).apply(content)
+      }
+    )
 
-    println( content \\ "a")
-
-    (
-      // TODO changer le lien, et mettre un lien vers une page d'edition
-      "#editLink"  #> SHtml.link(redirectPath, linkCallback _, content \\ "a")
-    ).apply(content)
+    result
   }
 
 

@@ -5,19 +5,23 @@ package snippet {
 
 import requestvars.taskImportance
 import xml.{Text, NodeSeq}
-import net.liftweb.http.DispatchSnippet
 import model.{Task, TaskImportance}
 import net.liftweb.util.BindHelpers._
+import xml.NodeSeq._
+import net.liftweb.http.{RequestVar, SHtml, S, DispatchSnippet}
+import net.liftweb.common.{Empty, Full, Box}
+
+object currentTask extends RequestVar[Box[Task]](Empty)
 
 object TasksSnippet extends DispatchSnippet {
 
   def dispatch : DispatchIt = {
     case "list" => listOfSnippets(taskImportance.is) _
     case "listEditorFriendly" => listEditorFriendly _
+    case "viewTask" => viewTask _
   }
 
   private def listOfSnippets(importance: TaskImportance.Value) (content : NodeSeq) : NodeSeq = {
-    //<h2>test</h2>
     Task.getTasks(importance).flatMap(task =>
       bind("tasks", content,
            "label" -> Text(task.label),
@@ -34,7 +38,26 @@ object TasksSnippet extends DispatchSnippet {
       ).apply(content)
     )
 
-//    println(result)
+    result
+  }
+
+  private def viewTask(content : NodeSeq) : NodeSeq = {
+    val result = Task.getTasks.flatMap(task => {
+        val redirectPath = "/tasks/edition/"
+        // callback du lien
+        def linkCallback = {
+          currentTask(Full(task))
+          //S.redirectTo(redirectPath)
+        }
+
+        (
+          "#label *" #> task.label &
+          ".description *+" #> task.detail &
+          "#editLink"  #> SHtml.link(redirectPath, linkCallback _, content \\ "a")
+        ).apply(content)
+      }
+    )
+
     result
   }
 
