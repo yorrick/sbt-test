@@ -1,11 +1,11 @@
 package com.yorrick.model
 
-import java.lang.{IllegalStateException, IllegalArgumentException}
+import sun.security.krb5.internal.crypto.Nonce
+import scala.None
+import java.lang.{IllegalArgumentException, IllegalStateException}
 
-case object TaskImportance extends Enumeration /*with Ordered[TaskImportance]*/ {
-  val Important, Normal, Low = Value
-
-  //def compare(that: TaskImportance) : Int = 0
+case object TaskImportance extends Enumeration {
+  val Low, Normal, Important = Value
 }
 
 
@@ -17,7 +17,7 @@ object Task {
 
   def apply(id : Int) = new Task(id, "", "", TaskImportance.Normal)
 
-  private val tasks : List[Task] = List(
+  private var tasks : List[Task] = List(
     new Task(1, "Dishes", "Boring, but I have to do it", TaskImportance.Low),
     new Task(2, "Tondeuse", "Passer la tondeuse", TaskImportance.Important),
     new Task(3, "Musique", "Enregistrer musique", TaskImportance.Important),
@@ -32,13 +32,38 @@ object Task {
   }
 
   /**
-   * Simule un chargement de données
+   * Simule la persistence d'une tache
    */
-  def getTasks(importance: TaskImportance.Value) : List[Task] = tasks filter (_.importance == importance)
+  def saveTask(newTask : Task) : Task = {
+    if (newTask.id >= 0) {
+      tasks.find(_.id == newTask.id) match {
+        // cas de la modification
+        case Some(taskToBeModified) =>
+          tasks = newTask :: tasks.filterNot {taskToBeModified => taskToBeModified.id == newTask.id}
+       // erreur : on renseigne un id qui n'existe pas
+        case None =>
+          throw new IllegalArgumentException("Not task with id " + newTask.id)
+      }
+      newTask
+    }
+    else {
+      val nextId = (tasks max Ordering.by {t : Task => t.id}).id
+      new Task(nextId, newTask.label, newTask.detail, newTask.importance)
+    }
+  }
+
+  /** Fonction qui determine l'ordre dans lequel les taches sont renvoyees */
+  val taskSorter = (task : Task) => (task.importance, task.id)
 
   /**
-   * Retounre toutes les taches
+   * Simule un chargement de données
    */
-  def getTasks = tasks
+  def getTasks(importance: TaskImportance.Value) : List[Task] =
+    tasks filter (_.importance >= importance) sortBy taskSorter reverse
+
+  /**
+   * Retourne toutes les taches
+   */
+  def getTasks : List[Task] = getTasks(TaskImportance.Low)
 
 }

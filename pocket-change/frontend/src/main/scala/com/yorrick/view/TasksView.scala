@@ -17,7 +17,7 @@ object TasksView extends LiftView {
   /**
    * Liste des taches, avec liens pour edition
    */
-  def list : NodeSeq =
+  private def list : NodeSeq =
     <lift:surround with="default" at="content">
       <h2>Liste des taches à partir de {taskImportance.is}</h2>
       <ul >
@@ -33,11 +33,13 @@ object TasksView extends LiftView {
       </ul>
      </lift:surround>
 
-  def edit : NodeSeq = {
+
+
+  private def edit : NodeSeq = {
     <lift:surround with="default" at="content">
       {
-        currentTask.is match {
-          case Full(task : Task) => <h2>Edition de la tache {task}</h2>
+        currentTask.get match {
+          case Full(task : Task) => editTask(task)
           case Failure(message, _, _) => <h2>Impossible d'editer la tâche ({message})</h2>
           case _ => <h2>Veuillez spécifier une tache svp</h2>
         }
@@ -45,6 +47,16 @@ object TasksView extends LiftView {
 
     </lift:surround>
   }
+
+  private def editTask(task : Task) =
+    <lift:Tasks.editTask form="POST">
+      <h2>Edition de la tache {task.id}</h2>
+      <h3 id="label">Label : </h3>
+      <h3 id="description">Description : </h3>
+      <h3 >Importance : <br/><span id="importance">Groupe de boutons</span></h3>
+      <h3 id="submitButton"/>
+    </lift:Tasks.editTask>
+
 
 
 }
