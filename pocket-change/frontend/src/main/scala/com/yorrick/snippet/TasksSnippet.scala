@@ -10,6 +10,7 @@ import net.liftweb.util.BindHelpers._
 import xml.NodeSeq._
 import net.liftweb.http.{RequestVar, SHtml, S, DispatchSnippet}
 import net.liftweb.common.{Empty, Full, Box}
+import java.awt.Color
 
 object currentTask extends RequestVar[Box[Task]](Empty)
 
@@ -68,32 +69,72 @@ object TasksSnippet extends DispatchSnippet {
     var description = task.detail
     var importance : TaskImportance.Value = task.importance
 
-    val importanceMap : Map[String, TaskImportance.Value] = Map(
-      "Important" -> TaskImportance.Important,
-      "Normal"    -> TaskImportance.Normal,
-      "Faible"    -> TaskImportance.Low
-    )
-
-    def findLabelForValue(imp : TaskImportance.Value) : String = importanceMap find {entry => entry._2 == importance} match {
-      case Some((label, importance)) => label
-      case None => ""
-    }
+//    val importanceMap : Map[String, TaskImportance.Value] = Map(
+//      "Important" -> TaskImportance.Important,
+//      "Normal"    -> TaskImportance.Normal,
+//      "Faible"    -> TaskImportance.Low
+//    )
+//
+//    def findLabelForValue(imp : TaskImportance.Value) : String = importanceMap find {entry => entry._2 == importance} match {
+//      case Some((label, importance)) => label
+//      case None => ""
+//    }
 
     def modifierTask = {
       Task.saveTask(new Task(task.id, label, description, importance))
       S.redirectTo("/tasks/")
     }
 
+    val options = List(
+      (TaskImportance.Important, "Important"),
+      (TaskImportance.Normal,    "Normal"),
+      (TaskImportance.Low,       "Faible"))
+
+
     val result = (
       "#label *+"       #> SHtml.text(label, label = _, "maxlength" -> "20", "cols" -> "20") &
       "#description *+" #> SHtml.textarea(description, description = _, "cols" -> "30", "rows" -> "8") &
-      "#importance"  #> SHtml.radio(importanceMap.keys.toList, Full(findLabelForValue(importance)), {str : String => importance = importanceMap(str)}).toForm &
+//      "#importance"     #> SHtml.radio(importanceMap.keys.toList, Full(findLabelForValue(importance)), {str : String => importance = importanceMap(str)}).toForm &
+      "#importance"      #> SHtml.selectObj(options, Full(importance), {imp : TaskImportance.Value => importance = imp}) &
       "#submitButton"   #> SHtml.submit("Modifier", modifierTask _)
     ).apply(content)
 
 
     result
   }
+
+//    private def editTask(content : NodeSeq) : NodeSeq = {
+//    val task = currentTask.get.get
+//    var label = task.label
+//    var description = task.detail
+//    var importance : TaskImportance.Value = task.importance
+//
+//    val importanceMap : Map[String, TaskImportance.Value] = Map(
+//      "Important" -> TaskImportance.Important,
+//      "Normal"    -> TaskImportance.Normal,
+//      "Faible"    -> TaskImportance.Low
+//    )
+//
+//    def findLabelForValue(imp : TaskImportance.Value) : String = importanceMap find {entry => entry._2 == importance} match {
+//      case Some((label, importance)) => label
+//      case None => ""
+//    }
+//
+//    def modifierTask = {
+//      Task.saveTask(new Task(task.id, label, description, importance))
+//      S.redirectTo("/tasks/")
+//    }
+//
+//    val result = (
+//      "#label *+"       #> SHtml.text(label, label = _, "maxlength" -> "20", "cols" -> "20") &
+//      "#description *+" #> SHtml.textarea(description, description = _, "cols" -> "30", "rows" -> "8") &
+//      "#importance"  #> SHtml.radio(importanceMap.keys.toList, Full(findLabelForValue(importance)), {str : String => importance = importanceMap(str)}).toForm &
+//      "#submitButton"   #> SHtml.submit("Modifier", modifierTask _)
+//    ).apply(content)
+//
+//
+//    result
+//  }
 }
 
 }
