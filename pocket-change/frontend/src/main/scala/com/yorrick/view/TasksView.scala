@@ -49,11 +49,12 @@ object TasksView extends LiftView {
   }
 
   private def editTask(task : Task) =
-    <lift:Tasks.editTask form="POST">
+    <lift:Tasks.editTask form="POST" multipart="true">
       <h2>Edition de la tache {task.id}</h2>
       <h3 id="label">Label : </h3>
       <h3 id="description">Description : </h3>
       <h3>Importance : <br/><span id="importance">Groupe de boutons</span></h3>
+      <h3 id="image">Ajouter une image : </h3><br/>
       <h3 id="submitButton"/>
     </lift:Tasks.editTask>
 

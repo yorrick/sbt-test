@@ -9,7 +9,14 @@ case object TaskImportance extends Enumeration {
 }
 
 
-class Task(val id : Int, val label : String, val detail : String, val importance : TaskImportance.Value) {
+class Task(
+  val id : Int,
+  val label : String,
+  val detail : String,
+  val importance : TaskImportance.Value,
+  val data : Array[Byte] = Array(),
+  val mimeType : String = "") {
+
   override def toString = "Task " + id + ", label : " + label
 }
 
