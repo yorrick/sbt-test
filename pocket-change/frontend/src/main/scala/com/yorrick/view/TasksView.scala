@@ -25,9 +25,11 @@ object TasksView extends LiftView {
           <li>
             <h3 id="label">Label de la tâche</h3>
             <p class="description">Description : </p>
+            <img id="image"/>
             <p>
               <a id="editLink">Editer la tâche</a>
             </p>
+
           </li>
         </div>
       </ul>

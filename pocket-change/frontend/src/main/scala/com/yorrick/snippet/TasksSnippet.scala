@@ -4,13 +4,13 @@ package com.yorrick {
 package snippet {
 
 import requestvars.taskImportance
-import xml.{Text, NodeSeq}
-import model.{Task, TaskImportance}
 import net.liftweb.util.BindHelpers._
 import xml.NodeSeq._
 import net.liftweb.common.{Empty, Full, Box}
 import java.awt.Color
 import net.liftweb.http._
+import model.{Image, Task, TaskImportance}
+import xml.{Null, Attribute, Text, NodeSeq}
 
 object currentTask extends RequestVar[Box[Task]](Empty)
 
@@ -46,14 +46,24 @@ object TasksSnippet extends DispatchSnippet {
   private def viewTask(content : NodeSeq) : NodeSeq = {
     val result = Task.getTasks(taskImportance.is).flatMap(task => {
         val redirectPath = "/tasks/edition/"
+
         // callback du lien
         def linkCallback = {
           currentTask(Full(task))
         }
 
+        val imageTag = task.image match {
+          case Some(image) =>
+            val imageSource = "/tasks/image/" + task.id
+            <img id="image" alt="Image de test"/> % Attribute(None, "src", Text(imageSource), Null)
+          case None =>
+            <span>Pas d'image pour cette tâche</span>
+        }
+
         (
           "#label *"        #> (task.label + "(" + task.id + ", " + task.importance.toString + ")") &
           ".description *+" #> task.detail &
+          "#image"          #> imageTag &
           "#editLink"       #> SHtml.link(redirectPath, linkCallback _, content \\ "a")
         ).apply(content)
       }
@@ -83,6 +93,7 @@ object TasksSnippet extends DispatchSnippet {
 //    }
 
     def modifierTask = {
+      println("modifierTask")
 
       val receiptOk = fileHolder match {
         // An empty upload gets reported with a null mime type,
@@ -99,11 +110,14 @@ object TasksSnippet extends DispatchSnippet {
         case _ => true
       }
 
+      println("receiptOk=" + receiptOk)
+
       receiptOk match {
         case true =>
           val taskToSave = fileHolder match {
-            case FileParamHolder(_, mime, _, data) =>
-              new Task(task.id, label, description, importance, data, mime)
+            case Full(FileParamHolder(_, mime, _, data)) =>
+              println("Saving task with image!!!!!!!!!!!!!!!!!!!!!!!!")
+              new Task(task.id, label, description, importance, Some(new Image(data, mime)))
             case _ =>
               new Task(task.id, label, description, importance)
           }

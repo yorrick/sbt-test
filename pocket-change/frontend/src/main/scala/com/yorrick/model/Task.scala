@@ -3,19 +3,35 @@ package com.yorrick.model
 import sun.security.krb5.internal.crypto.Nonce
 import scala.None
 import java.lang.{IllegalArgumentException, IllegalStateException}
+import net.liftweb.http._
+import net.liftweb.common.{Failure, Box, Full}
 
 case object TaskImportance extends Enumeration {
   val Low, Normal, Important = Value
 }
 
+class Image (val data : Array[Byte], val mimeType : String)
+
+object Image {
+
+  def viewImage(id: String): Box[LiftResponse] =
+    try {
+      Task.getTask(id.toInt).image match {
+        case Some(image) => Full(InMemoryResponse(image.data, List("Content-Type" -> image.mimeType), Nil, 200))
+        case None => Failure("No such task item")
+      }
+    } catch {
+      case nfe: NumberFormatException => Failure("Invalid task ID")
+    }
+
+}
 
 class Task(
   val id : Int,
   val label : String,
   val detail : String,
   val importance : TaskImportance.Value,
-  val data : Array[Byte] = Array(),
-  val mimeType : String = "") {
+  val image : Option[Image] = None) {
 
   override def toString = "Task " + id + ", label : " + label
 }

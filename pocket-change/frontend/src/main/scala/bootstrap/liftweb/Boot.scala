@@ -57,6 +57,12 @@ class Boot {
          RewriteResponse("tasks-management" :: "list" :: Nil, Map("taskImportance" -> taskImportance))
     })
 
+    // Custom dispatch for image generation
+    LiftRules.dispatch.append {
+      case Req(List("tasks", "image", taskId), _, _) =>
+        () => Image.viewImage(taskId)
+    }
+
     // build sitemap
     val entries = List(Menu("Home") / "index") :::
                   List(Menu(Loc("Static", Link(List("static"), true, "/static/index"), "Static Content"))) :::
