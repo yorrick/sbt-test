@@ -12,7 +12,7 @@ import net.liftweb.http._
 import model.{Image, Task, TaskImportance}
 import xml.{Null, Attribute, Text, NodeSeq}
 
-object TasksSnippet extends DispatchSnippet {
+class TasksSnippet extends StatefulSnippet {
 
   def dispatch : DispatchIt = {
     case "viewTask" => viewTask _
@@ -43,16 +43,26 @@ object TasksSnippet extends DispatchSnippet {
     result
   }
 
+  var alreadyModifyied = false
+  var (label, description, importance) = ("", "", TaskImportance.Normal)
+
 
   private def editTask(content : NodeSeq) : NodeSeq = {
     val task = currentTask.get.get
-    var label = task.label
-    var description = task.detail
-    var importance : TaskImportance.Value = task.importance
+
+    if (!alreadyModifyied) {
+      label = task.label
+      description = task.detail
+      importance = task.importance
+      //(label, description, importance) = (task.label, task.detail, task.importance)
+    }
+
     // Add a variable to hold the FileParamHolder on submission
     var fileHolder : Box[FileParamHolder] = Empty
 
     def modifierTask = {
+      alreadyModifyied = true
+
       val receiptOk = fileHolder match {
         // An empty upload gets reported with a null mime type,
         // so we need to handle this special case
@@ -78,8 +88,11 @@ object TasksSnippet extends DispatchSnippet {
           }
 
           Task.saveTask(taskToSave)
+          unregisterThisSnippet()
           S.redirectTo("/tasks/")
-        case false => // do nothing
+        case false =>
+          // erreur, dans ce cas on re sette la current task, pour que la vue n'affiche pas d'erreur
+          currentTask(Full(task))
       }
 
 

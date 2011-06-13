@@ -135,8 +135,16 @@ class Boot {
     // snippet dispatching
     LiftRules.snippetDispatch.append {
       case "StaticDispatchSnippet" => StaticDispatchSnippet
-      case "Tasks"                 => TasksSnippet
       case "Ledger"                => LedgerSnippet
+      //case "Tasks"                 => TasksSnippet
+
+      case "Tasks"                 => S.snippetForClass("TasksSnippet") openOr {
+        println("creating new snippet for tasks")
+        val instance = new TasksSnippet
+        instance.addName("TasksSnippet")
+        S.overrideSnippetForClass("TasksSnippet", instance)
+        instance
+      }
 
       // S.snippetForClass checks to see if an instance has already
       // registered. This is the case after form submission or when
