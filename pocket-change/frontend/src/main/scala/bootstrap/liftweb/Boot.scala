@@ -136,13 +136,14 @@ class Boot {
     LiftRules.snippetDispatch.append {
       case "StaticDispatchSnippet" => StaticDispatchSnippet
       case "Ledger"                => LedgerSnippet
-      //case "Tasks"                 => TasksSnippet
+      //case "Tasks"                 => TasksListSnippet
 
-      case "Tasks"                 => S.snippetForClass("TasksSnippet") openOr {
+      case "TasksList"             => TasksListSnippet
+      case "TasksEdition"          => S.snippetForClass("TasksListSnippet") openOr {
         println("creating new snippet for tasks")
-        val instance = new TasksSnippet
-        instance.addName("TasksSnippet")
-        S.overrideSnippetForClass("TasksSnippet", instance)
+        val instance = new TaskEditionSnippet
+        instance.addName("TasksListSnippet")
+        S.overrideSnippetForClass("TasksListSnippet", instance)
         instance
       }
 
