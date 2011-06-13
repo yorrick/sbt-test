@@ -14,6 +14,7 @@ import util.{Props}
 import com.yorrick.model._
 import com.yorrick.view.{FormsTestView, TasksView, RssView}
 import com.yorrick.snippet._
+import requestvars.currentTask
 
 class Boot {
   def boot {
@@ -43,15 +44,20 @@ class Boot {
       case RewriteRequest(ParsePath(List("account", accountName), _, _, _), _, _) =>
          RewriteResponse("viewAcct" :: Nil, Map("accountName" -> accountName))
 
-      case RewriteRequest(ParsePath(List("tasks", "edition", taskId), _, _, _), _, _) =>
-        try {
-          val id = taskId.toInt
-          currentTask(Full(Task.getTask(id)))
-        } catch {
-          case e : NumberFormatException => currentTask(Failure("Task id must be a number"))
-          case e => currentTask(Failure("Error : " + e.getMessage))
-        }
-        RewriteResponse("tasks-management" :: "edit" :: Nil/*, {println("url rewriting " + taskId); Map("taskId" -> taskId)}*/)
+
+      case RewriteRequest(ParsePath(list @ List("tasks", "edition", _*), _, _, _), _, _) =>
+        //println("request rewriting" + list)
+        RewriteResponse("tasks-management" :: "edit" :: Nil)
+
+//      case RewriteRequest(ParsePath(List("tasks", "edition", taskId), _, _, _), _, _) =>
+//        try {
+//          val id = taskId.toInt
+//          currentTask(Full(Task.getTask(id)))
+//        } catch {
+//          case e : NumberFormatException => currentTask(Failure("Task id must be a number"))
+//          case e => currentTask(Failure("Error : " + e.getMessage))
+//        }
+//        RewriteResponse("tasks-management" :: "edit" :: Nil)
 
       case RewriteRequest(ParsePath(List("tasks", taskImportance), _, _, _), _, _) =>
          RewriteResponse("tasks-management" :: "list" :: Nil, Map("taskImportance" -> taskImportance))

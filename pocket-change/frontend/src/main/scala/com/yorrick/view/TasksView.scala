@@ -2,10 +2,9 @@ package com.yorrick.view
 
 import net.liftweb.http.LiftView
 import xml.NodeSeq
-import com.yorrick.snippet.currentTask
-import com.yorrick.snippet.requestvars.{taskImportance}
 import com.yorrick.model.Task
 import net.liftweb.common.{Failure, Empty, Full}
+import com.yorrick.snippet.requestvars.{currentTask, taskImportance}
 
 object TasksView extends LiftView {
 
@@ -43,7 +42,7 @@ object TasksView extends LiftView {
         currentTask.get match {
           case Full(task : Task) => editTask(task)
           case Failure(message, _, _) => <h2>Impossible d'editer la tâche ({message})</h2>
-          case _ => <h2>Veuillez spécifier une tache svp</h2>
+          case Empty => <h2>Veuillez spécifier une tache svp</h2>
         }
       }
 
