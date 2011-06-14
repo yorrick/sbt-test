@@ -10,7 +10,7 @@ case object TaskImportance extends Enumeration {
   val Low, Normal, Important = Value
 }
 
-class Image (val data : Array[Byte], val mimeType : String)
+case class Image (val data : Array[Byte], val mimeType : String)
 
 object Image {
 

@@ -44,7 +44,8 @@ object TasksView extends LiftView {
         <h3 id="description">Description : </h3>
         <h3>Importance : <br/><span id="importance">Groupe de boutons</span></h3>
         <h3 id="image">Ajouter une image : </h3><br/>
-        <h3 id="submitButton"/>
+        <h3 id="saveButton"/>
+        <h3 id="nextButton"/>
       </lift:TasksEdition.editTask>
     </lift:surround>
   }
