@@ -75,8 +75,13 @@ class TasksEditionSnippet extends StatefulSnippet {
     S.redirectTo("/tasks/")
   }
 
-  private def firstStage(content : NodeSeq) : NodeSeq = {
+  private def firstStage(c : NodeSeq) : NodeSeq = {
     println("firstStage")
+
+     val content = TemplateFinder.findAnyTemplate("tasks" :: "stage1" :: Nil) match {
+      case Full(content) => content
+      case _ => <span>Could not load template</span>
+    }
 
     // lorsque'on provient de la page de liste, la tache à sauvegarder est la tache courante (requestParam)
     currentTask.get match {
@@ -95,56 +100,6 @@ class TasksEditionSnippet extends StatefulSnippet {
       case _ =>
         // rien à faire
     }
-
-//    val task = currentTask.get.get
-//
-//    if (!alreadyModifyied) {
-//      label = task.label
-//      description = task.detail
-//      importance = task.importance
-//      //(label, description, importance) = (task.label, task.detail, task.importance)
-//    }
-//
-//    // Add a variable to hold the FileParamHolder on submission
-//    var fileHolder : Box[FileParamHolder] = Empty
-//
-//    def modifierTask = {
-//      alreadyModifyied = true
-//
-//      val receiptOk = fileHolder match {
-//        // An empty upload gets reported with a null mime type,
-//        // so we need to handle this special case
-//        case Full(FileParamHolder(_, null, _, _)) => true
-//        case Full(FileParamHolder(_, mime, _, data))
-//          if mime.startsWith("image/") => {
-//            true
-//          }
-//        case Full(_) => {
-//          S.error("Invalid receipt attachment")
-//          false
-//        }
-//        case _ => true
-//      }
-//
-//      receiptOk match {
-//        case true =>
-//          val taskToSave = fileHolder match {
-//            case Full(FileParamHolder(_, mime, _, data)) =>
-//              new Task(task.id, label, description, importance, Some(new Image(data, mime)))
-//            case _ =>
-//              new Task(task.id, label, description, importance)
-//          }
-//
-//          Task.saveTask(taskToSave)
-//          unregisterThisSnippet()
-//          S.redirectTo("/tasks/")
-//        case false =>
-//          // erreur, dans ce cas on re sette la current task, pour que la vue n'affiche pas d'erreur
-//          currentTask(Full(task))
-//      }
-//
-//
-//    }
 
     def saveFirstStageData = {
       if (controlTask(taskToSave)){
@@ -182,12 +137,8 @@ class TasksEditionSnippet extends StatefulSnippet {
 
   private def secondStage(content : NodeSeq) : NodeSeq = {
     def handleFileUpload : FileParamHolder => Any = {holder : FileParamHolder =>
-      //println("handleFileUpload : " + holder)
-
       holder match {
         case FileParamHolder(name, mime, fileName, data) =>
-//          println("FileParamHolder.name=" + name)
-//          println("FileParamHolder.fileName=" + fileName)
           taskToSave.image = Some((mime, data))
         case _ => // nothing to do
       }
