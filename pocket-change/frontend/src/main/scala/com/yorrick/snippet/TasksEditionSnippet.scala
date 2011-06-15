@@ -182,10 +182,12 @@ class TasksEditionSnippet extends StatefulSnippet {
 
   private def secondStage(content : NodeSeq) : NodeSeq = {
     def handleFileUpload : FileParamHolder => Any = {holder : FileParamHolder =>
-      println("handleFileUpload : " + holder)
+      //println("handleFileUpload : " + holder)
 
       holder match {
-        case FileParamHolder(_, mime, _, data) =>
+        case FileParamHolder(name, mime, fileName, data) =>
+//          println("FileParamHolder.name=" + name)
+//          println("FileParamHolder.fileName=" + fileName)
           taskToSave.image = Some((mime, data))
         case _ => // nothing to do
       }
@@ -197,8 +199,15 @@ class TasksEditionSnippet extends StatefulSnippet {
       }
     }
 
+    def previous = {
+      dispatch = {
+        case "editTask" => firstStage _
+      }
+    }
+
     val result = (
       "#image"        #> SHtml.fileUpload(handleFileUpload) &
+      "#previousButton"#> SHtml.submit("Précédent", previous _) &
       "#saveButton"   #> SHtml.submit("Sauvegarder", saveFirstAndSecondStageData _)
     ).apply(content)
 
