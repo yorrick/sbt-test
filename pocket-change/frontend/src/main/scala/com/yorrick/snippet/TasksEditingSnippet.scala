@@ -78,10 +78,7 @@ class TasksEditionSnippet extends StatefulSnippet {
   private def firstStage(c : NodeSeq) : NodeSeq = {
     println("firstStage")
 
-     val content = TemplateFinder.findAnyTemplate("tasks" :: "stage1" :: Nil) match {
-      case Full(content) => content
-      case _ => <span>Could not load template</span>
-    }
+    val content = TemplateFinder.findAnyTemplate("templates-hidden/tasks/stage1" :: Nil) openOr <span>Could not load template</span>
 
     // lorsque'on provient de la page de liste, la tache à sauvegarder est la tache courante (requestParam)
     currentTask.get match {
@@ -135,7 +132,7 @@ class TasksEditionSnippet extends StatefulSnippet {
     result
   }
 
-  private def secondStage(content : NodeSeq) : NodeSeq = {
+  private def secondStage(c : NodeSeq) : NodeSeq = {
     def handleFileUpload : FileParamHolder => Any = {holder : FileParamHolder =>
       holder match {
         case FileParamHolder(name, mime, fileName, data) =>
@@ -155,6 +152,8 @@ class TasksEditionSnippet extends StatefulSnippet {
         case "editTask" => firstStage _
       }
     }
+
+    val content = TemplateFinder.findAnyTemplate("templates-hidden/tasks/stage2" :: Nil) openOr <span>Could not load template</span>
 
     val result = (
       "#image"        #> SHtml.fileUpload(handleFileUpload) &
