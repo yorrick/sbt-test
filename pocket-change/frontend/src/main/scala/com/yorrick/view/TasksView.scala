@@ -20,7 +20,7 @@ object TasksView extends LiftView {
     <lift:surround with="default" at="content">
       <h2>Liste des taches à partir de {taskImportance.is}</h2>
       <ul >
-        <div class="lift:Tasks.viewTask">
+        <div class="lift:TasksList.viewTask">
           <li>
             <h3 id="label">Label de la tâche</h3>
             <p class="description">Description : </p>
@@ -38,26 +38,28 @@ object TasksView extends LiftView {
 
   private def edit : NodeSeq = {
     <lift:surround with="default" at="content">
-      {
-        currentTask.get match {
-          case Full(task : Task) => editTask(task)
-          case Failure(message, _, _) => <h2>Impossible d'editer la tâche ({message})</h2>
-          case Empty => <h2>Veuillez spécifier une tache svp</h2>
-        }
-      }
-
+      <lift:TasksEdition.editTask form="POST" multipart="true">
+        <!--<h2>Edition de la tache</h2>
+        <h3 id="label">Label : </h3>
+        <h3 id="description">Description : </h3>
+        <h3>Importance : <br/><span id="importance">Groupe de boutons</span></h3>
+        <h3 id="image">Ajouter une image : </h3><br/>
+        <h3 id="saveButton"/>
+        <h3 id="previousButton"/>
+        <h3 id="nextButton"/>-->
+      </lift:TasksEdition.editTask>
     </lift:surround>
   }
 
-  private def editTask(task : Task) =
-    <lift:Tasks.editTask form="POST" multipart="true">
-      <h2>Edition de la tache {task.id}</h2>
-      <h3 id="label">Label : </h3>
-      <h3 id="description">Description : </h3>
-      <h3>Importance : <br/><span id="importance">Groupe de boutons</span></h3>
-      <h3 id="image">Ajouter une image : </h3><br/>
-      <h3 id="submitButton"/>
-    </lift:Tasks.editTask>
+//  private def editTask(task : Task) =
+//    <lift:Tasks.editTask form="POST" multipart="true">
+//      <h2>Edition de la tache {task.id}</h2>
+//      <h3 id="label">Label : </h3>
+//      <h3 id="description">Description : </h3>
+//      <h3>Importance : <br/><span id="importance">Groupe de boutons</span></h3>
+//      <h3 id="image">Ajouter une image : </h3><br/>
+//      <h3 id="submitButton"/>
+//    </lift:Tasks.editTask>
 
 
 
