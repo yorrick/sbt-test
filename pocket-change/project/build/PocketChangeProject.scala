@@ -36,6 +36,7 @@ class PocketChangeProject(info: ProjectInfo) extends ParentProject(info) with Id
 
   val runFrontend = frontend.jettyRun
   val stopFrontend = frontend.jettyStop
+  val restartFrontend = stopFrontend && runFrontend
 
   import fi.jawsy.sbtplugins.jrebel.JRebelWebPlugin
   import fi.jawsy.sbtplugins.jrebel.JRebelJarPlugin

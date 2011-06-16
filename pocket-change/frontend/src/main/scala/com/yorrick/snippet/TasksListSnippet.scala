@@ -27,8 +27,8 @@ object TasksListSnippet extends DispatchSnippet {
         }
 
         (
-          "#label *"        #> (task.label + "(" + task.id + ", " + task.importance.toString + ")") &
-          ".description *+" #> task.detail &
+          "#label"        #> (task.label + "(" + task.id + ", " + task.importance.toString + ")") &
+          ".description" #> task.detail &
           "#image"          #> imageTag &
           "#editLink"       #> SHtml.link(redirectPath, () => currentTask(Full(task)), content \\ "a")
         ).apply(content)
