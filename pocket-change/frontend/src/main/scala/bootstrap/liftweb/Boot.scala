@@ -126,6 +126,10 @@ class Boot {
 
       // list of tasks
       //case "tasks-management" :: "list" :: Nil => {println("vue liste des taches appelée"); Left(() => Full(TasksView.list))}
+      case "tasks-management" :: "edit" :: Nil => Left(() => TemplateFinder.findAnyTemplate("templates-hidden/tasks/tasks" :: Nil) match {
+        case Full(content) => Full(content)
+        case _ => Empty
+      })
       case "tasks-management" :: Nil => {println("vue des taches appelée"); Right(TasksView)}
 
       // test des formulaires
