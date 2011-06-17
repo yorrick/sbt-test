@@ -4,7 +4,7 @@ import sun.security.krb5.internal.crypto.Nonce
 import scala.None
 import java.lang.{IllegalArgumentException, IllegalStateException}
 import net.liftweb.http._
-import net.liftweb.common.{Failure, Box, Full}
+import net.liftweb.common.{Logger, Failure, Box, Full}
 
 case object TaskImportance extends Enumeration {
   val Low, Normal, Important = Value
@@ -38,6 +38,8 @@ class Task(
 
 object Task {
 
+  val log = Logger(classOf[Task])
+
   def apply(id : Int) = new Task(id, "", "", TaskImportance.Normal)
 
   private var tasks : List[Task] = List(
@@ -58,6 +60,8 @@ object Task {
    * Simule la persistence d'une tache
    */
   def saveTask(newTask : Task) : Task = {
+    log.warn("saveTask" + newTask)
+
     if (newTask.id >= 0) {
       tasks.find(_.id == newTask.id) match {
         // cas de la modification
@@ -70,9 +74,24 @@ object Task {
       newTask
     }
     else {
-      val nextId = (tasks max Ordering.by {t : Task => t.id}).id
-      new Task(nextId, newTask.label, newTask.detail, newTask.importance)
+      val nextId = tasks match {
+        case Nil => 0
+        case _ => (tasks max Ordering.by {t : Task => t.id}).id + 1
+      }
+
+      val createdTask = new Task(nextId, newTask.label, newTask.detail, newTask.importance, newTask.image)
+      tasks = createdTask :: tasks
+      createdTask
     }
+  }
+
+  /**
+   * Simule la suppresion d'une tache
+   */
+  def removeTask(taskId : Int) : Task = {
+    val removedTask = getTask(taskId)
+    tasks = tasks.filterNot {taskToBeModified => taskToBeModified.id == taskId}
+    removedTask
   }
 
   /** Fonction qui determine l'ordre dans lequel les taches sont renvoyees */

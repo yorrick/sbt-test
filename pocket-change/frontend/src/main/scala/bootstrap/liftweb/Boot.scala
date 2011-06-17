@@ -46,18 +46,7 @@ class Boot {
 
 
       case RewriteRequest(ParsePath(list @ List("tasks", "edition", _*), _, _, _), _, _) =>
-        //println("request rewriting" + list)
         RewriteResponse("tasks-management" :: "edit" :: Nil)
-
-//      case RewriteRequest(ParsePath(List("tasks", "edition", taskId), _, _, _), _, _) =>
-//        try {
-//          val id = taskId.toInt
-//          currentTask(Full(Task.getTask(id)))
-//        } catch {
-//          case e : NumberFormatException => currentTask(Failure("Task id must be a number"))
-//          case e => currentTask(Failure("Error : " + e.getMessage))
-//        }
-//        RewriteResponse("tasks-management" :: "edit" :: Nil)
 
       case RewriteRequest(ParsePath(List("tasks", taskImportance), _, _, _), _, _) =>
          RewriteResponse("tasks-management" :: "list" :: Nil, Map("taskImportance" -> taskImportance))
